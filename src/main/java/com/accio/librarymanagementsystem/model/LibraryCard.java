@@ -8,6 +8,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
@@ -15,6 +17,7 @@ import java.sql.Date;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class LibraryCard {
 
     @Id
@@ -32,4 +35,7 @@ public class LibraryCard {
     @OneToOne //first one for current class.
     @JoinColumn //by default will create fk column from primary key
     Student student;
+
+    @OneToMany(mappedBy = "libraryCard" , cascade = CascadeType.ALL)
+    List<Transaction> transactionList = new ArrayList<>();
 }

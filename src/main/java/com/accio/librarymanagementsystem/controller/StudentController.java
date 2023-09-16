@@ -1,5 +1,7 @@
 package com.accio.librarymanagementsystem.controller;
 
+import com.accio.librarymanagementsystem.dto.requestDto.StudentRequest;
+import com.accio.librarymanagementsystem.dto.responseDto.StudentResponse;
 import com.accio.librarymanagementsystem.service.StudentService;
 import com.accio.librarymanagementsystem.model.Student;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,24 +17,36 @@ public class StudentController {
     StudentService studentService;
 
     @PostMapping("/addStudent")
-    public ResponseEntity addStudent(@RequestBody Student student)
+    public ResponseEntity addStudent(@RequestBody StudentRequest studentRequest)
     {
-//        Student studentResponse = studentService.addStudent(student);
-        String studentResponse = studentService.addStudent(student);
-            return new ResponseEntity(studentResponse , HttpStatus.CREATED);
+        StudentResponse studentResponse = studentService.addStudent(studentRequest);
+        return new ResponseEntity(studentResponse , HttpStatus.CREATED);
+    }
 
-//        return new ResponseEntity<>("Student already added" , HttpStatus.BAD_REQUEST);
+    @GetMapping("/getByEmail")
+    public ResponseEntity getStudentByEmail(@RequestParam("email")String email)
+    {
+        try {
+            StudentResponse studentResponse = studentService.getStudentByEmail(email);
+            return new ResponseEntity<>(studentResponse, HttpStatus.FOUND);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity(e.getMessage() , HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/getStudent")
     public ResponseEntity getStudent(@RequestParam("id") int regno)
     {
-        Student student = studentService.getStudent(regno);
-        if(student!=null)
+        try
         {
-            return new ResponseEntity(student , HttpStatus.FOUND);
+        StudentResponse studentResponse = studentService.getStudent(regno);
+        return new ResponseEntity(studentResponse , HttpStatus.FOUND);
         }
-        return new ResponseEntity("Invalid id!!" , HttpStatus.NOT_FOUND);
+        catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/deleteStudent/{id}")

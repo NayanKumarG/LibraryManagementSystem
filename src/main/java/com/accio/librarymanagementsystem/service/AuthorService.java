@@ -1,20 +1,11 @@
 package com.accio.librarymanagementsystem.service;
 
-import com.accio.librarymanagementsystem.model.Author;
-import com.accio.librarymanagementsystem.repository.AuthorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.accio.librarymanagementsystem.dto.requestDto.AuthorRequest;
+import com.accio.librarymanagementsystem.dto.responseDto.AuthorResponse;
 
-@Service
-public class AuthorService {
+public interface AuthorService {
 
-    @Autowired
-    AuthorRepository authorRepository;
-    public String addAuthor(Author author) {
+    public AuthorResponse addAuthor(AuthorRequest authorRequest);
 
-        Author savedAuthor = authorRepository.save(author);
-        return "Author saved successfully";
-
-
-    }
+    public AuthorResponse getBooksByAuthorId(int id);
 }
