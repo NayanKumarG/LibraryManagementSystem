@@ -11,6 +11,8 @@ import com.accio.librarymanagementsystem.repository.BookRepository;
 import com.accio.librarymanagementsystem.service.BookService;
 import com.accio.librarymanagementsystem.transformer.BookTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,6 +27,9 @@ public class BookServiceImpl implements BookService {
 
     @Autowired
     AuthorRepository authorRepository;
+
+    @Autowired
+    JavaMailSender javaMailSender;
     public  String addBook(BookRequest bookRequest) {
 
         Optional<Author> authorOptional = authorRepository.findById(bookRequest.getId());
@@ -35,6 +40,15 @@ public class BookServiceImpl implements BookService {
         book.setAuthor(author);
         author.getBook().add(book);
         authorRepository.save(author);
+        String text = "Hi! " +author.getName()+" You added the book "+book.getTitle()+"Thank You!!!";
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom("aneeshgunditharu@gmail.com");
+        simpleMailMessage.setTo("nayangunditharu@gmail.com");
+        simpleMailMessage.setSubject("Congrats!! Book added");
+        simpleMailMessage.setText(text);
+
+        javaMailSender.send(simpleMailMessage);
         return "Book added successfully";
 
     }
